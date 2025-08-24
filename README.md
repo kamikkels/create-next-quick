@@ -11,9 +11,11 @@
 - **Interactive Setup** — prompts you for project name, TypeScript, Tailwind CSS, and more.
 - **Next.js App Directory** — support for the new Next.js app directory.
 - **Custom Page Generation** — create multiple pages at once.
-- **Linter Support** — choose between ESLint and Biome.
+- **Linter Support** — choose between no linter, ESLint, and Biome.
 - **Shadcn UI** — automatically install and configure Shadcn UI.
 - **Clean Project Setup** — removes default favicon and clears public folder.
+- **Empty Default Page** — overwrites the default `page.tsx` or `index.tsx` with an empty template.
+- **Dynamic Metadata** — updates the `layout.tsx` or `layout.jsx` metadata (title and description) based on project name.
 
 ## Installation
 
@@ -28,11 +30,11 @@ npx create-next-quick
 When you run `npx create-next-quick`, you will be prompted to:
 
 1. **Enter Project Name** — e.g., `my-app`
-2. **Choose to use TypeScript**
-3. **Choose to use Tailwind CSS**
-4. **Choose to use the app directory**
-5. **Enter the names of the pages you want to create**
-6. **Choose a linter**
+2. **Choose to use TypeScript (default: Yes)**
+3. **Choose to use Tailwind CSS (default: Yes)**
+4. **Choose to use the app directory (default: Yes)**
+5. **Enter the names of the pages you want to create (default: none)**
+6. **Choose a linter (default: none)**
 7. **Choose to use Shadcn UI (default: No)**
 
 Example run:
