@@ -54,8 +54,7 @@ import { readFileSync } from 'fs';
     const { projectName, useTypeScript, useTailwind, useAppDir, pages, linter, useShadcn } = answers;
     const projectPath = path.join(process.cwd(), projectName);
 
-    console.log(`
-        Creating ${projectName}...`);
+    console.log(`Creating ${projectName}...`);
 
     let command = `npx create-next-app@latest ${projectName} --use-npm --yes`;
     if (useTypeScript) {
@@ -83,7 +82,7 @@ import { readFileSync } from 'fs';
     createFolder(publicPath);
 
     if (useAppDir) {
-        const layoutPath = path.join(projectPath, "app", useTypeScript ? "layout.tsx" : "layout.jsx");
+        const layoutPath = path.join(projectPath, "app", useTypeScript ? "layout.tsx" : "layout.js");
         if (fileExists(layoutPath)) {
             let layoutContent = readFileSync(layoutPath, "utf8");
             layoutContent = layoutContent.replace(/title: "Create Next App"/, `title: "${projectName}"`);
@@ -102,16 +101,16 @@ import { readFileSync } from 'fs';
 
     let defaultPagePath;
     if (useAppDir) {
-        defaultPagePath = path.join(projectPath, "app", useTypeScript ? "page.tsx" : "page.jsx");
+        defaultPagePath = path.join(projectPath, "app", useTypeScript ? "page.tsx" : "page.js");
     } else {
-        defaultPagePath = path.join(projectPath, "src", "pages", useTypeScript ? "index.tsx" : "index.jsx");
+        defaultPagePath = path.join(projectPath, "src", "pages", useTypeScript ? "index.tsx" : "index.js");
     }
-    const emptyPageContent = 
-    `export default function Page() {\n  return (\n    <></>\n  );\n}\n`;
+    const emptyPageContent =
+        `export default function Page() {\n  return (\n    <></>\n  );\n}\n`;
     writeFile(defaultPagePath, emptyPageContent);
 
     const readmePath = path.join(projectPath, "README.md");
-    writeFile(readmePath, "");
+    writeFile(readmePath, `# ${projectName}`);
 
     if (linter === "biome") {
         run(`npm install --save-dev @biomejs/biome`, projectPath);
