@@ -1,0 +1,30 @@
+{
+  "name": "create-next-quick",
+  "version": "1.0.0",
+  "description": "A CLI tool to quickly scaffold a Next.js project",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "bin": {
+    "create-next-quick": "index.js"
+  },
+  "keywords": [
+    "next.js",
+    "react",
+    "cli",
+    "scaffolding",
+    "starter",
+    "template",
+    "tailwind",
+    "javascript",
+    "frontend"
+  ],
+  "author": "gaureshpai",
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "^9.2.2"
+  }
+}
