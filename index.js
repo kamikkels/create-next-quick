@@ -45,7 +45,7 @@ import { createPages } from './lib/templates.js';
             type: "confirm",
             name: "useShadcn",
             message: "Do you want to use Shadcn UI?",
-            default: true
+            default: false
         }
     ]);
 
@@ -76,10 +76,13 @@ import { createPages } from './lib/templates.js';
     deleteFolder(publicPath);
     createFolder(publicPath);
 
-    
-
     const pagesPath = useAppDir ? path.join(projectPath, "app") : path.join(projectPath, "src", "pages");
     createPages(pagesPath, pages, useTypeScript, useAppDir);
+
+    const faviconPathInAppOrSrc = useAppDir ? path.join(projectPath, "app", "favicon.ico") : path.join(projectPath, "src", "favicon.ico");
+    if (fileExists(faviconPathInAppOrSrc)) {
+        deleteFile(faviconPathInAppOrSrc);
+    }
 
     const readmePath = path.join(projectPath, "README.md");
     writeFile(readmePath, "");
@@ -91,7 +94,7 @@ import { createPages } from './lib/templates.js';
 
     if (useShadcn) {
         run(`npm install --save-dev tailwindcss-animate class-variance-authority`, projectPath);
-        run(`npx shadcn-ui@latest init`, projectPath);
+        run(`npx shadcn@latest init`, projectPath);
         const componentsJsonPath = path.join(projectPath, "components.json");
         const componentsJsonContent = {
             "$schema": "https://ui.shadcn.com/schema.json",
@@ -100,7 +103,7 @@ import { createPages } from './lib/templates.js';
             "tsx": useTypeScript,
             "tailwind": {
                 "config": useTypeScript ? "tailwind.config.ts" : "tailwind.config.js",
-                "css": "src/app/globals.css",
+                "css": useAppDir ? "src/app/globals.css" : "src/styles/globals.css",
                 "baseColor": "slate",
                 "cssVariables": true
             },
