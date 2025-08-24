@@ -1,6 +1,6 @@
 {
   "name": "create-next-quick",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CLI tool to quickly scaffold a Next.js project",
   "main": "index.js",
   "type": "module",
@@ -24,8 +24,16 @@
   ],
   "author": "gaureshpai",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gaureshpai/create-next-quick.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gaureshpai/create-next-quick/issues"
+  },
+  "homepage": "https://github.com/gaureshpai/create-next-quick#readme",
   "dependencies": {
     "fs": "^0.0.1-security",
-    "inquirer": "^9.2.2"
+    "inquirer": "^9.2.7"
   }
 }

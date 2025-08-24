@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import inquirer from "inquirer";
 import path from "path";
 import { run, deleteFolder, createFolder, deleteFile, fileExists, writeFile } from './lib/utils.js';
