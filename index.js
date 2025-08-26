@@ -51,6 +51,13 @@ import { createPages, createLayout } from './lib/templates.js';
             default: "none"
         },
         {
+            type: "list",
+            name: "orm",
+            message: "Choose an ORM (default: none):",
+            choices: ["none", "prisma", "drizzle"],
+            default: "none"
+        },
+        {
             type: "confirm",
             name: "useShadcn",
             message: "Do you want to use Shadcn UI? (default: No)",
@@ -58,7 +65,7 @@ import { createPages, createLayout } from './lib/templates.js';
         }
     ]);
 
-    const { projectName, useTypeScript, useTailwind, useAppDir, useSrcDir, pages, linter, useShadcn } = answers;
+    const { projectName, useTypeScript, useTailwind, useAppDir, useSrcDir, pages, linter, orm, useShadcn } = answers;
     const projectPath = path.join(process.cwd(), projectName);
 
     console.log(`Creating ${projectName}...`);
@@ -128,6 +135,59 @@ import { createPages, createLayout } from './lib/templates.js';
         run(`npx @biomejs/biome init`, projectPath);
     }
 
+    if (orm === "prisma") {
+        run(`npm install --save-dev prisma`, projectPath);
+        run(`npm install @prisma/client`, projectPath);
+        run(`npx prisma init`, projectPath);
+
+        const prismaLibDir = useSrcDir ? path.join(projectPath, "src", "lib") : path.join(projectPath, "lib");
+        createFolder(prismaLibDir);
+
+        const prismaContent = `import { PrismaClient } from '@prisma/client'
+
+declare global {
+  var prisma: PrismaClient | undefined
+}
+
+const prisma = global.prisma || new PrismaClient()
+
+if (process.env.NODE_ENV !== 'production') global.prisma = prisma
+
+export default prisma;
+`;
+        writeFile(path.join(prismaLibDir, "prisma.ts"), prismaContent);
+    }
+
+    if (orm === "drizzle") {
+        run(`npm install drizzle-orm @vercel/postgres`, projectPath);
+        run(`npm install --save-dev drizzle-kit`, projectPath);
+
+        const drizzleConfigContent = `import type { Config } from 'drizzle-kit';
+
+export default {
+  schema: './src/db/schema.ts',
+  out: './drizzle',
+  driver: 'pg',
+  dbCredentials: {
+    connectionString: process.env.DATABASE_URL!,
+  },
+} satisfies Config;
+`;
+        writeFile(path.join(projectPath, "drizzle.config.ts"), drizzleConfigContent);
+
+        const dbDir = useSrcDir ? path.join(projectPath, "src", "db") : path.join(projectPath, "db");
+        createFolder(dbDir);
+
+        const schemaContent = `import { pgTable, serial, text } from 'drizzle-orm/pg-core';
+
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+});
+`;
+        writeFile(path.join(dbDir, "schema.ts"), schemaContent);
+    }
+
     if (useShadcn) {
         run(`npm install --save-dev tailwindcss-animate class-variance-authority`, projectPath);
         run(`npx shadcn@latest init`, projectPath);
@@ -149,6 +209,11 @@ import { createPages, createLayout } from './lib/templates.js';
             }
         };
         writeFile(componentsJsonPath, JSON.stringify(componentsJsonContent, null, 2));
+    }
+
+    if (orm !== "none") {
+        const envContent = `DATABASE_URL="your_db_url"`;
+        writeFile(path.join(projectPath, ".env"), envContent);
     }
 
     console.log("Setup complete!");

@@ -15,7 +15,10 @@
 - **Shadcn UI** — automatically install and configure Shadcn UI.
 - **Clean Project Setup** — removes default favicon and clears public folder.
 - **Empty Default Page** — overwrites the default `page.tsx` or `index.tsx` with an empty template.
-- **Dynamic Metadata** — updates the `layout.tsx` or `layout.jsx` metadata (title and description) based on project name.
+- **Dynamic Metadata** — always overwrites the `layout.tsx` or `layout.jsx` with a minimal template.
+- **Conditional API Route Deletion** — deletes the default `api/hello.js` route if using the `src` directory and not the `app` directory.
+- **Flexible Project Naming** — allows using `.` to create the project in the current directory.
+- **ORM Support** — choose between no ORM, Prisma, and Drizzle.
 
 ## Installation
 
@@ -29,13 +32,14 @@ npx create-next-quick
 
 When you run `npx create-next-quick`, you will be prompted to:
 
-1. **Enter Project Name** — e.g., `my-app`
+1. **Enter Project Name** — e.g., `my-app` (or `.` to create in the current directory)
 2. **Choose to use TypeScript (default: Yes)**
 3. **Choose to use Tailwind CSS (default: Yes)**
 4. **Choose to use the app directory (default: Yes)**
 5. **Enter the names of the pages you want to create (default: none)**
 6. **Choose a linter (default: none)**
-7. **Choose to use Shadcn UI (default: No)**
+7. **Choose an ORM (default: none)**
+8. **Choose to use Shadcn UI (default: No)**
 
 Example run:
 
@@ -51,23 +55,9 @@ npx create-next-quick
 ? Do you want to use Tailwind CSS? Yes
 ? Do you want to use the app directory? Yes
 ? Enter the names of the pages you want to create (comma-separated): home, about, contact
-```
-
-## Folder Structure
-
-After running, your project will look like this:
-
-```
-my-app/
-├── app/
-│   ├── page.tsx
-│   ├── about/
-│   │   └── page.tsx
-│   └── contact/
-│       └── page.tsx
-├── public/
-├── package.json
-└── README.md
+? Choose a linter (default: none): none
+? Choose an ORM (default: none): prisma
+? Do you want to use Shadcn UI? No
 ```
 
 ## Commands
@@ -96,4 +86,4 @@ Before submitting, please ensure:
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-> Credits: Special thanks to [@harshgupta20](https://github.com/harshgupta20) for the original idea and inspiration for this project.
+> Credits: Special thanks to [@harshgupta20](https://github.com/harshgupta20) for the idea and inspiration for this project.

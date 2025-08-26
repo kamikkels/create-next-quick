@@ -1,6 +1,6 @@
 {
   "name": "create-next-quick",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A CLI tool to quickly scaffold a Next.js project",
   "main": "index.js",
   "files": [
@@ -37,6 +37,9 @@
   },
   "homepage": "https://github.com/gaureshpai/create-next-quick#readme",
   "dependencies": {
-    "inquirer": "^9.2.7"
+    "child_process": "^1.0.2",
+    "fs": "^0.0.1-security",
+    "inquirer": "^9.2.7",
+    "path": "^0.12.7"
   }
 }
