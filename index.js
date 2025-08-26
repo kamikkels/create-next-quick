@@ -26,6 +26,12 @@ import { readFileSync } from 'fs';
         },
         {
             type: "confirm",
+            name: "useSrcDir",
+            message: "Do you want to use src directory? (default: Yes)",
+            default: true
+        },
+        {
+            type: "confirm",
             name: "useAppDir",
             message: "Do you want to use the app directory? (default: Yes)",
             default: true
@@ -52,7 +58,7 @@ import { readFileSync } from 'fs';
         }
     ]);
 
-    const { projectName, useTypeScript, useTailwind, useAppDir, pages, linter, useShadcn } = answers;
+    const { projectName, useTypeScript, useTailwind, useAppDir, useSrcDir, pages, linter, useShadcn } = answers;
     const projectPath = path.join(process.cwd(), projectName);
 
     console.log(`Creating ${projectName}...`);
@@ -66,10 +72,13 @@ import { readFileSync } from 'fs';
     if (useTailwind) {
         command += " --tailwind";
     }
+    if (useSrcDir) {
+        command += " --src-dir";
+    }
     if (useAppDir) {
         command += " --app";
     } else {
-        command += " --no-app --src-dir";
+        command += " --no-app";
     }
 
     if (linter === "none") {
@@ -82,21 +91,21 @@ import { readFileSync } from 'fs';
     deleteFolder(publicPath);
     createFolder(publicPath);
 
-    createLayout(projectPath, projectName, useTypeScript, useAppDir);
+    createLayout(projectPath, projectName, useTypeScript, useAppDir, useSrcDir);
 
-    const pagesPath = useAppDir ? path.join(projectPath, "app") : path.join(projectPath, "src", "pages");
-    createPages(pagesPath, pages, useTypeScript, useAppDir);
+    const pagesPath = useAppDir ? (useSrcDir ? path.join(projectPath, "src", "app") : path.join(projectPath, "app")) : (useSrcDir ? path.join(projectPath, "src", "pages") : path.join(projectPath, "pages"));
+    createPages(pagesPath, pages, useTypeScript, useAppDir, useSrcDir);
 
-    const faviconPathInAppOrSrc = useAppDir ? path.join(projectPath, "app", "favicon.ico") : path.join(projectPath, "src", "favicon.ico");
+    const faviconPathInAppOrSrc = useAppDir ? (useSrcDir ? path.join(projectPath, "src", "app", "favicon.ico") : path.join(projectPath, "app", "favicon.ico")) : (useSrcDir ? path.join(projectPath, "src", "favicon.ico") : path.join(projectPath, "favicon.ico"));
     if (fileExists(faviconPathInAppOrSrc)) {
         deleteFile(faviconPathInAppOrSrc);
     }
 
     let defaultPagePath;
     if (useAppDir) {
-        defaultPagePath = path.join(projectPath, "app", useTypeScript ? "page.tsx" : "page.js");
+        defaultPagePath = useSrcDir ? path.join(projectPath, "src", "app", useTypeScript ? "page.tsx" : "page.js") : path.join(projectPath, "app", useTypeScript ? "page.tsx" : "page.js");
     } else {
-        defaultPagePath = path.join(projectPath, "src", "pages", useTypeScript ? "index.tsx" : "index.js");
+        defaultPagePath = useSrcDir ? path.join(projectPath, "src", "pages", useTypeScript ? "index.tsx" : "index.js") : path.join(projectPath, "pages", useTypeScript ? "index.tsx" : "index.js");
     }
     const emptyPageContent =
         `export default function Page() {\n  return (\n    <></>\n  );\n}\n`;
@@ -121,7 +130,7 @@ import { readFileSync } from 'fs';
             "tsx": useTypeScript,
             "tailwind": {
                 "config": useTypeScript ? "tailwind.config.ts" : "tailwind.config.js",
-                "css": useAppDir ? "src/app/globals.css" : "src/styles/globals.css",
+                "css": useAppDir ? (useSrcDir ? "src/app/globals.css" : "app/globals.css") : (useSrcDir ? "src/styles/globals.css" : "styles/globals.css"),
                 "baseColor": "slate",
                 "cssVariables": true
             },
