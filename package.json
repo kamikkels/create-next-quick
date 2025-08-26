@@ -37,7 +37,6 @@
   },
   "homepage": "https://github.com/gaureshpai/create-next-quick#readme",
   "dependencies": {
-    "fs": "^0.0.1-security",
     "inquirer": "^9.2.7"
   }
 }

@@ -3,14 +3,14 @@ import inquirer from "inquirer";
 import path from "path";
 import { run, deleteFolder, createFolder, deleteFile, fileExists, writeFile } from './lib/utils.js';
 import { createPages, createLayout } from './lib/templates.js';
-import { readFileSync } from 'fs';
 
 (async () => {
     const answers = await inquirer.prompt([
         {
             type: "input",
             name: "projectName",
-            message: "Enter project name:"
+            message: "Enter project name:",
+            filter: (input) => input.trim() === '' ? '.' : input.trim()
         },
         {
             type: "confirm",
@@ -87,6 +87,15 @@ import { readFileSync } from 'fs';
 
     run(command);
 
+    if (!useAppDir) {
+        const apiHelloPath = useSrcDir
+            ? path.join(projectPath, "src", "pages", "api", "hello.js")
+            : path.join(projectPath, "pages", "api", "hello.js");
+        if (fileExists(apiHelloPath)) {
+            deleteFile(apiHelloPath);
+        }
+    }
+
     const publicPath = path.join(projectPath, "public");
     deleteFolder(publicPath);
     createFolder(publicPath);
@@ -144,7 +153,8 @@ import { readFileSync } from 'fs';
 
     console.log("Setup complete!");
     console.log(`
-        Next steps:
-        cd ${projectName}
-        npm run dev`);
+Thankyou for using create-next-quick!
+Next steps:
+cd ${projectName}
+npm run dev`);
 })();
