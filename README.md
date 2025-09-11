@@ -33,13 +33,14 @@ npx create-next-quick
 When you run `npx create-next-quick`, you will be prompted to:
 
 1. **Enter Project Name** — e.g., `my-app` (or `.` to create in the current directory)
-2. **Choose to use TypeScript (default: Yes)**
-3. **Choose to use Tailwind CSS (default: Yes)**
-4. **Choose to use the app directory (default: Yes)**
-5. **Enter the names of the pages you want to create (default: none)**
-6. **Choose a linter (default: none)**
-7. **Choose an ORM (default: none)**
-8. **Choose to use Shadcn UI (default: No)**
+2. **Choose a package manager (default: pnpm)**
+3. **Choose to use TypeScript (default: Yes)**
+4. **Choose to use Tailwind CSS (default: Yes)**
+5. **Choose to use the app directory (default: Yes)**
+6. **Enter the names of the pages you want to create (default: none)**
+7. **Choose a linter (default: none)**
+8. **Choose an ORM (default: none)**
+9. **Choose to use Shadcn UI (default: No)**
 
 Example run:
 

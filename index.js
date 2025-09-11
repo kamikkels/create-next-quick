@@ -10,7 +10,20 @@ import { createPages, createLayout } from './lib/templates.js';
             type: "input",
             name: "projectName",
             message: "Enter project name:",
-            filter: (input) => input.trim() === '' ? '.' : input.trim()
+            filter: (input) => input.trim() === '' ? '.' : input.trim(),
+            validate: (input) => {
+                if (input !== input.toLowerCase()) {
+                    return "Project name must be in lowercase.";
+                }
+                return true;
+            }
+        },
+        {
+            type: "list",
+            name: "packageManager",
+            message: "Choose a package manager:",
+            choices: ["npm", "yarn", "pnpm"],
+            default: "pnpm"
         },
         {
             type: "confirm",
@@ -65,12 +78,12 @@ import { createPages, createLayout } from './lib/templates.js';
         }
     ]);
 
-    const { projectName, useTypeScript, useTailwind, useAppDir, useSrcDir, pages, linter, orm, useShadcn } = answers;
+    const { projectName, packageManager, useTypeScript, useTailwind, useAppDir, useSrcDir, pages, linter, orm, useShadcn } = answers;
     const projectPath = path.join(process.cwd(), projectName);
 
     console.log(`Creating ${projectName}...`);
 
-    let command = `npx create-next-app@latest ${projectName} --use-npm --yes`;
+    let command = `npx --yes create-next-app@latest ${projectName} --use-${packageManager} --yes`;
     if (useTypeScript) {
         command += " --ts";
     } else {
@@ -124,20 +137,25 @@ import { createPages, createLayout } from './lib/templates.js';
         defaultPagePath = useSrcDir ? path.join(projectPath, "src", "pages", useTypeScript ? "index.tsx" : "index.js") : path.join(projectPath, "pages", useTypeScript ? "index.tsx" : "index.js");
     }
     const emptyPageContent =
-        `export default function Page() {\n  return (\n    <></>\n  );\n}\n`;
+        `export default function Page() {
+  return (
+    <></>
+  );
+}
+`;
     writeFile(defaultPagePath, emptyPageContent);
 
     const readmePath = path.join(projectPath, "README.md");
     writeFile(readmePath, `# ${projectName}`);
 
     if (linter === "biome") {
-        run(`npm install --save-dev @biomejs/biome`, projectPath);
+        run(`${packageManager} install --save-dev @biomejs/biome`, projectPath);
         run(`npx @biomejs/biome init`, projectPath);
     }
 
     if (orm === "prisma") {
-        run(`npm install --save-dev prisma`, projectPath);
-        run(`npm install @prisma/client`, projectPath);
+        run(`${packageManager} install --save-dev prisma`, projectPath);
+        run(`${packageManager} install @prisma/client`, projectPath);
         run(`npx prisma init`, projectPath);
 
         const prismaLibDir = useSrcDir ? path.join(projectPath, "src", "lib") : path.join(projectPath, "lib");
@@ -159,8 +177,8 @@ export default prisma;
     }
 
     if (orm === "drizzle") {
-        run(`npm install drizzle-orm @vercel/postgres`, projectPath);
-        run(`npm install --save-dev drizzle-kit`, projectPath);
+        run(`${packageManager} install drizzle-orm @vercel/postgres`, projectPath);
+        run(`${packageManager} install --save-dev drizzle-kit`, projectPath);
 
         const drizzleConfigContent = `import type { Config } from 'drizzle-kit';
 
@@ -189,7 +207,7 @@ export const users = pgTable('users', {
     }
 
     if (useShadcn) {
-        run(`npm install --save-dev tailwindcss-animate class-variance-authority`, projectPath);
+        run(`${packageManager} install --save-dev tailwindcss-animate class-variance-authority`, projectPath);
         run(`npx shadcn@latest init`, projectPath);
         const componentsJsonPath = path.join(projectPath, "components.json");
         const componentsJsonContent = {
@@ -221,5 +239,5 @@ export const users = pgTable('users', {
 Thankyou for using create-next-quick!
 Next steps:
 cd ${projectName}
-npm run dev`);
+${packageManager} run dev`);
 })();
