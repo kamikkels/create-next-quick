@@ -30,7 +30,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gaureshpai/create-next-quick.git"
+    "url": "git+https://github.com/gaureshpai/create-next-quick.git"
   },
   "bugs": {
     "url": "https://github.com/gaureshpai/create-next-quick/issues"
