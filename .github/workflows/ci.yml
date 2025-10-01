@@ -44,7 +44,7 @@ jobs:
   report-status:
     runs-on: ubuntu-latest
     needs: build-and-test
-    if: always()
+    if: github.event_name == 'pull_request' && always()
     permissions:
       issues: write
       pull-requests: write
