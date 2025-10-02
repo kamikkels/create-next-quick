@@ -60,7 +60,6 @@ jobs:
       - name: Combine and post comment
         uses: actions/github-script@v8
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const fs = await import('fs/promises');
             const path = await import('path');
